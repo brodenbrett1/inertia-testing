@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { route as getRoute } from '../../../vendor/tightenco/ziggy';
 
@@ -7,8 +8,8 @@ const { route } = defineProps({
     route: String,
 });
 const page = usePage();
-const href = getRoute(route ?? '');
-const isActive = page.props.routeName === route;
+const href = computed(() => getRoute(route ?? '') || '#');
+const isActive = computed(() => page.props.routeName === route);
 </script>
 
 <template>
