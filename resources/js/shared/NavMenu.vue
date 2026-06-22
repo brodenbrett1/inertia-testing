@@ -1,23 +1,13 @@
-<script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
-import NavLink from './NavLink.vue';
-import { useSlots } from 'vue';
-defineProps({ time: String });
-
-const appName = usePage().props.app_name;
-const slots = useSlots();
-</script>
-
 <template>
     <div class="navbar bg-base-200">
         <div class="navbar-start">
             <Link href="/">
-                <img src="/assets/logo.svg" class="h-full" alt="{{ appName }}" />
+                <img src="/assets/logo.svg" class="h-full" alt="{{ $page.props.name }}" />
             </Link>
         </div>
 
-        <div v-if="slots.default" class="navbar-center">
-            <slot></slot>
+        <div class="navbar-center">
+            {{ $page.props.time }}
         </div>
 
         <div class="navbar-end">

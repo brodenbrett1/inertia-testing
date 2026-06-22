@@ -1,12 +1,18 @@
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, Link } from '@inertiajs/vue3';
 import { createPinia } from 'pinia';
+import NavLink from './shared/NavLink.vue';
+import AppLayout from './shared/AppLayout.vue';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: title => (title ? `${title} - ${appName}` : appName),
     withApp(app) {
         app.use(createPinia());
+        app.component('Link', Link);
+        app.component('NavLink', NavLink);
+        app.component('AppLayout', AppLayout);
     },
+    layout: () => AppLayout,
     progress: {
         delay: 250, // ms before bar appears
         color: '#29d',
