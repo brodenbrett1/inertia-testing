@@ -9,7 +9,7 @@ import ViewContent from './ViewContent.vue';
 
     <div class="hero min-h-screen bg-base-200">
         <div class="hero-content text-center">
-            <div class="max-w-md">
+            <div class="max-w-7xl">
                 <slot></slot>
             </div>
         </div>
