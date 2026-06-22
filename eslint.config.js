@@ -81,8 +81,6 @@ export default defineConfigWithVueTs(
             'node_modules',
             'public',
             'bootstrap/ssr',
-            'tailwind.config.js',
-            'vite.config.ts',
             'resources/js/actions/**',
             'resources/js/components/ui/*',
             'resources/js/routes/**',
@@ -172,6 +170,13 @@ export default defineConfigWithVueTs(
                 allowEmptyLines: false,
             }],
             'vue/mustache-interpolation-spacing': ['warn', 'always'],
+
+            'vue/no-reserved-component-names': ['error', {
+                disallowVueBuiltInComponents: false,
+                disallowVue3BuiltInComponents: false,
+                htmlElementCaseSensitive: true,
+            }],
+
         },
     },
 
