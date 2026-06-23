@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import NavMenu from './NavMenu.vue';
-import ViewContent from './ViewContent.vue';
-
 </script>
 
 <template>
     <NavMenu />
 
-    <div class="hero min-h-screen bg-base-200">
-        <div class="hero-content text-center">
-            <div class="max-w-7xl">
-                <slot></slot>
-            </div>
+    <div class="min-h-screen bg-base-200 grid items-center">
+        <div class="max-w-325 w-full m-auto">
+            <slot></slot>
         </div>
     </div>
 </template>
