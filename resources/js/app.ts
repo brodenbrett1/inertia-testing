@@ -1,7 +1,7 @@
 import { createInertiaApp, Head, Link } from '@inertiajs/vue3';
 import { createPinia } from 'pinia';
-import NavLink from './shared/NavLink.vue';
 import AppLayout from './shared/AppLayout.vue';
+import NavLink from './shared/NavLink.vue';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 import { Ziggy } from './ziggy';
 
