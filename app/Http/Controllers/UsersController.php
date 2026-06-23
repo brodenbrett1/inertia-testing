@@ -11,16 +11,31 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10)->onEachSide(1)->through(fn ($user) => [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'created_at' => $user->created_at->format('l, F jS Y, g:i A'),
-        ]);
+        $validated = $request->validate(['q' => 'nullable|string']);
 
-        return Inertia::render('Users', compact('users'));
+        $searchTerm = $validated['q'] ?? null;
+
+        $users = User::query()
+            ->when($searchTerm, function ($query, $q) {
+                $query->whereLike('name', "%{$q}%");
+                $query->orWhereLike('email', "%{$q}%");
+            })
+            ->paginate(10)
+            ->withQueryString()
+            ->onEachSide(1)
+            ->through(fn ($user) => [
+                'id' => $user->uuid,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at->format('l, F jS Y, g:i A'),
+            ]);
+
+        return Inertia::render('Users', [
+            'users' => $users,
+            'filters' => $validated,
+        ]);
     }
 
     /**
