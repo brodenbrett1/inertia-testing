@@ -4,21 +4,28 @@ import { Lock, Mail, User as UserIcon } from '@lucide/vue';
 import { reactive } from 'vue';
 import BackLink from '@/components/Shared/BackLink.vue';
 
+const { user } = defineProps({ user: Object });
+
 const form = reactive({
-    name: '',
-    email: '',
+    name: user?.name ?? '',
+    email: user?.email ?? '',
     password: '',
 });
 
 function submit() {
-    router.post(route('users.store'), form);
+    router.visit(
+        route(user ? 'users.update' : 'users.store', user),
+        {
+            method: user ? 'patch' : 'post',
+            data: form,
+        });
 }
 </script>
 
 <template>
     <div class="max-w-xl m-auto">
         <Head title="Create User" />
-        <h1 class="text-5xl font-bold mb-6">Create User</h1>
+        <h1 class="text-5xl font-bold mb-6">User Details</h1>
         <BackLink class="inline-block mb-2" />
 
         <div class="card bg-base-100 shadow-md mx-auto">
@@ -52,7 +59,7 @@ function submit() {
                         </div>
                     </div>
 
-                    <div class="form-control">
+                    <div v-if="!user" class="form-control">
                         <label class="label">Password</label>
 
                         <div class="input input-bordered w-full">
@@ -60,7 +67,7 @@ function submit() {
 
                             <input v-model="form.password"
                                    type="password"
-                                   placeholder="••••••••"
+                                   :placeholder="user ? 'Current Password' : '••••••••'"
                                    autocomplete="new-password" />
                         </div>
                     </div>

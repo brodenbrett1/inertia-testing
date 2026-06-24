@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UsersController extends Controller
@@ -22,6 +23,7 @@ class UsersController extends Controller
                 $query->whereLike('name', "%{$searchTerm}%");
                 $query->orWhereLike('email', "%{$searchTerm}%");
             })
+            ->latest()
             ->paginate(10)
             ->withQueryString()
             ->onEachSide(1)
@@ -41,19 +43,28 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function credit(?User $user = null)
     {
-
-        return Inertia::render('Users/Create', [
-        ]);
+        return Inertia::render('Users/User', ['user' => $user]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function upsert(Request $request, ?User $user)
     {
-        //
+        $attributes = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)],
+        ]);
+
+        if ($user) {
+            $user->update($attributes);
+        } else {
+            $user = User::create($attributes);
+        }
+
+        return to_route('users.index')->with('success', 'Created a new user '.$user->name.'!');
     }
 
     /**
@@ -61,23 +72,14 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+        return Inertia::render('Users/Show', [
+            'user' => [
+                'id' => $user->uuid,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at->format('l, F jS Y, g:i A'),
+            ],
+        ]);
     }
 
     /**

@@ -9,17 +9,23 @@ defineProps({ users: Object });
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Created</th>
+                    <th class="w-60">Email</th>
+                    <th class="w-80">Created</th>
+                    <th class="w-10"></th>
                 </tr>
             </thead>
 
             <tbody>
                 <!-- row 1 -->
                 <tr v-for="user in users?.data" :key="user.id">
-                    <td>{{ user.name }}</td>
+                    <td>
+                        <Link class="link link-hover link-primary" :href="route('users.show', user.id)"><b>{{ user.name }}</b></Link>
+                        <code class="block text-xs text-base-content/50">{{ user.id }}</code>
+                    </td>
+
                     <td>{{ user.email }}</td>
                     <td>{{ user.created_at }}</td>
+                    <td><Link class="btn" :href="route('users.edit', user.id)">Edit</Link></td>
                 </tr>
             </tbody>
         </table>
