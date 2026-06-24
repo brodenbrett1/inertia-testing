@@ -21,7 +21,9 @@ trait HasNonPrimaryUuid
     public static function bootHasNonPrimaryUuid()
     {
         static::creating(function ($model) {
-            $model->uuid = (string) Str::uuid7();
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid7();
+            }
         });
     }
 }

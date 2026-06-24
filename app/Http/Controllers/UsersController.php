@@ -51,20 +51,24 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function upsert(Request $request, ?User $user)
+    public function upsert(Request $request, ?User $user = null)
     {
         $attributes = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)],
         ]);
 
-        if ($user) {
+        if ($user?->exists) {
             $user->update($attributes);
         } else {
             $user = User::create($attributes);
         }
 
-        return to_route('users.index')->with('success', 'Created a new user '.$user->name.'!');
+        $message = $user->wasRecentlyCreated
+            ? 'Created a new user '.$user->name.'!'
+            : 'Updated user '.$user->name.'!';
+
+        return to_route('users.index')->with('success', $message);
     }
 
     /**

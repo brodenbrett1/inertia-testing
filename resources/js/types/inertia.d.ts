@@ -6,9 +6,13 @@ declare module '@inertiajs/core' {
         name?: string
         time?: string
         /** The name of the current route. */
-        routeName?: string | null
+        route_name?: string | null
         /** The HTTP referrer, if it is an internal non-circular URL. */
         back_link?: string | null
+        flash?: {
+            success?: string | null
+            error?: string | null
+        }
         sidebarOpen?: boolean
     }
 }

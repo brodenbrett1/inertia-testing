@@ -24,8 +24,8 @@ function submit() {
 
 <template>
     <div class="max-w-xl m-auto">
-        <Head title="Create User" />
-        <h1 class="text-5xl font-bold mb-6">User Details</h1>
+        <Head :title="user ? 'Edit User' : 'Create User'" />
+        <h1 class="text-5xl font-bold mb-6">{{ user ? 'Edit User' : 'Create User' }}</h1>
         <BackLink class="inline-block mb-2" />
 
         <div class="card bg-base-100 shadow-md mx-auto">

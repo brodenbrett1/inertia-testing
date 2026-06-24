@@ -27,6 +27,9 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
+    /**
+     * Note - this allows app-url.com.evil.blahblah through.
+     */
     private function resolveBackLink(): ?string
     {
         $referer = request()->headers->get('referer');
@@ -52,7 +55,10 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'time' => now()->format('l, F jS Y, g:i A'),
             'back_link' => $this->resolveBackLink(),
-            'flash' => session(),
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+            ],
             'route_name' => Route::currentRouteName(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

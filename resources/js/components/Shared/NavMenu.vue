@@ -12,7 +12,7 @@ const links = [
         <div class="navbar max-w-335 mx-auto">
             <div class="navbar-start">
                 <Link href="/">
-                    <img src="/assets/logo.svg" class="h-full" alt="{{ $page.props.name }}" />
+                    <img src="/assets/logo.svg" class="h-full" :alt="$page.props.name" />
                 </Link>
             </div>
 
