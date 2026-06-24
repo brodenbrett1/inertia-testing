@@ -8,6 +8,8 @@ declare module '@inertiajs/core' {
         auth?: { user?: unknown } | null
         route?: { name: string, label: string, url: string }
         routeName?: string | null
+        /** The HTTP referrer, if it is an internal non-circular URL. */
+        back_link?: string | null
         sidebarOpen?: boolean
     }
 }

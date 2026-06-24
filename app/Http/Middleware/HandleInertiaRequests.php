@@ -27,6 +27,17 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
+    private function resolveBackLink(): ?string
+    {
+        $referer = request()->headers->get('referer');
+
+        if ($referer && str_starts_with($referer, url('/')) && $referer !== request()->url()) {
+            return $referer;
+        }
+
+        return null;
+    }
+
     /**
      * Define the props that are shared by default.
      *
@@ -40,9 +51,8 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'time' => now()->format('l, F jS Y, g:i A'),
-            'auth' => [
-                'user' => $request->user(),
-            ],
+            'back_link' => $this->resolveBackLink(),
+            'flash' => session(),
             'route_name' => Route::currentRouteName(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
