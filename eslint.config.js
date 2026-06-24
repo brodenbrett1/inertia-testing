@@ -193,10 +193,8 @@ export default defineConfigWithVueTs(
         rules:
         {
             'jsdoc/require-jsdoc': ['off'],
-            'jsdoc/require-param': ['error'],
             'jsdoc/no-blank-blocks': ['error'],
             'jsdoc/require-description-complete-sentence': ['error'],
-            'jsdoc/require-param-description': ['off'],
             'jsdoc/require-param-description': ['off'],
             'jsdoc/require-returns-description': ['off'],
             'jsdoc/require-param': ['off'],
