@@ -2,11 +2,10 @@ import type { PageProps as _PageProps } from '@inertiajs/core';
 
 declare module '@inertiajs/core' {
     interface PageProps extends _PageProps {
-        navRoutes?: { name: string, label: string, url: string }[]
+        /** The App name. */
         name?: string
         time?: string
-        auth?: { user?: unknown } | null
-        route?: { name: string, label: string, url: string }
+        /** The name of the current route. */
         routeName?: string | null
         /** The HTTP referrer, if it is an internal non-circular URL. */
         back_link?: string | null
