@@ -56,6 +56,7 @@ class UsersController extends Controller
         $attributes = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)],
+            'password' => [$user ? 'sometimes' : 'required', 'string', 'min:8'],
         ]);
 
         if ($user?->exists) {

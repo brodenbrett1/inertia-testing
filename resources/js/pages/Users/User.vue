@@ -3,6 +3,8 @@ import { router } from '@inertiajs/vue3';
 import { Lock, Mail, User as UserIcon } from '@lucide/vue';
 import { reactive } from 'vue';
 import BackLink from '@/components/Shared/BackLink.vue';
+import ErrorLabel from '@/components/Shared/Forms/ErrorLabel.vue';
+import FieldLabel from '@/components/Shared/Forms/FieldLabel.vue';
 
 const { user } = defineProps({ user: Object });
 
@@ -32,7 +34,7 @@ function submit() {
             <div class="card-body gap-6">
                 <form class="space-y-4" @submit.prevent="submit">
                     <div class="form-control">
-                        <label class="label">Username</label>
+                        <FieldLabel req="true">Username</FieldLabel>
 
                         <div class="input-group">
                             <div class="input input-bordered w-full">
@@ -42,12 +44,14 @@ function submit() {
                                        type="text"
                                        placeholder="John Doe"
                                        autocomplete="name" />
+
+                                <ErrorLabel name="name" />
                             </div>
                         </div>
                     </div>
 
                     <div class="form-control">
-                        <label class="label">Email</label>
+                        <FieldLabel req="true">Email</FieldLabel>
 
                         <div class="input input-bordered w-full">
                             <Mail class="h-4 w-4 text-base-content/50" />
@@ -56,11 +60,13 @@ function submit() {
                                    type="email"
                                    placeholder="example@email.com"
                                    autocomplete="email" />
+
+                            <ErrorLabel name="email" />
                         </div>
                     </div>
 
                     <div v-if="!user" class="form-control">
-                        <label class="label">Password</label>
+                        <FieldLabel req="true">Password</FieldLabel>
 
                         <div class="input input-bordered w-full">
                             <Lock class="h-4 w-4 text-base-content/50" />
@@ -69,6 +75,8 @@ function submit() {
                                    type="password"
                                    :placeholder="user ? 'Current Password' : '••••••••'"
                                    autocomplete="new-password" />
+
+                            <ErrorLabel name="password" />
                         </div>
                     </div>
 
