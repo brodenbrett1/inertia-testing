@@ -1,33 +1,31 @@
 <script setup>
-import { router } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { Lock, Mail, User as UserIcon } from '@lucide/vue';
-import { reactive } from 'vue';
+import { provide } from 'vue';
 import BackLink from '@/components/Shared/BackLink.vue';
 import ErrorLabel from '@/components/Shared/Forms/ErrorLabel.vue';
 import FieldLabel from '@/components/Shared/Forms/FieldLabel.vue';
 
 const { user } = defineProps({ user: Object });
 
-const form = reactive({
+const form = useForm({
     name: user?.name ?? '',
     email: user?.email ?? '',
     password: '',
 });
 
-function submit() {
-    router.visit(
-        route(user ? 'users.update' : 'users.store', user),
-        {
-            method: user ? 'patch' : 'post',
-            data: form,
-        });
-}
+provide('form', form);
+
+const url = route(user ? 'users.update' : 'users.store', user);
+const title = user ? 'Edit User' : 'Create User';
+
+const submit = () => user ? form.patch(url) : form.post(url);
 </script>
 
 <template>
     <div class="max-w-xl m-auto">
-        <Head :title="user ? 'Edit User' : 'Create User'" />
-        <h1 class="text-5xl font-bold mb-6">{{ user ? 'Edit User' : 'Create User' }}</h1>
+        <Head :title />
+        <h1 class="text-5xl font-bold mb-6">{{ title }}</h1>
         <BackLink class="inline-block mb-2" />
 
         <div class="card bg-base-100 shadow-md mx-auto">
@@ -44,9 +42,9 @@ function submit() {
                                        type="text"
                                        placeholder="John Doe"
                                        autocomplete="name" />
-
-                                <ErrorLabel name="name" />
                             </div>
+
+                            <ErrorLabel name="name" />
                         </div>
                     </div>
 
@@ -60,9 +58,9 @@ function submit() {
                                    type="email"
                                    placeholder="example@email.com"
                                    autocomplete="email" />
-
-                            <ErrorLabel name="email" />
                         </div>
+
+                        <ErrorLabel name="email" />
                     </div>
 
                     <div v-if="!user" class="form-control">
@@ -75,12 +73,12 @@ function submit() {
                                    type="password"
                                    :placeholder="user ? 'Current Password' : '••••••••'"
                                    autocomplete="new-password" />
-
-                            <ErrorLabel name="password" />
                         </div>
+
+                        <ErrorLabel name="password" />
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-full">Submit</button>
+                    <button type="submit" class="btn btn-primary w-full" :class="{'btn-disabled': form.processing}" :disabled="form.processing">Submit</button>
                 </form>
             </div>
         </div>
