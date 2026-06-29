@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UsersController extends Controller
@@ -27,12 +27,7 @@ class UsersController extends Controller
             ->paginate(10)
             ->withQueryString()
             ->onEachSide(1)
-            ->through(fn ($user) => [
-                'id' => $user->uuid,
-                'name' => $user->name,
-                'email' => $user->email,
-                'created_at' => $user->created_at->format('l, F jS Y, g:i A'),
-            ]);
+            ->through(fn ($user) => $this->_present($user));
 
         return Inertia::render('Users/Index', [
             'users' => $users,
@@ -43,55 +38,51 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function credit(?User $user = null)
+    public function edit(?User $user = null)
     {
-        return Inertia::render('Users/User', ['user' => $user]);
+        return Inertia::render('Users/User', ['user' => $this->_present($user)]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function upsert(Request $request, ?User $user = null)
+    public function create()
     {
-        $attributes = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)],
-            'password' => [$user ? 'sometimes' : 'required', 'string', 'min:8'],
-        ]);
+        dump('test');
 
-        if ($user?->exists) {
-            $user->update($attributes);
-        } else {
-            $user = User::create($attributes);
-        }
-
-        $message = $user->wasRecentlyCreated
-            ? 'Created a new user '.$user->name.'!'
-            : 'Updated user '.$user->name.'!';
-
-        return to_route('users.index')->with('success', $message);
+        return Inertia::render('Users/User');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function store(UserRequest $request)
+    {
+        User::create($request->validated());
+
+        return to_route('users.index');
+    }
+
+    public function update(UserRequest $request, ?User $user = null)
+    {
+        $user->update($request->validated());
+
+        return to_route('users.index');
+    }
+
     public function show(User $user)
     {
         return Inertia::render('Users/Show', [
-            'user' => [
-                'id' => $user->uuid,
-                'name' => $user->name,
-                'email' => $user->email,
-                'created_at' => $user->created_at->format('l, F jS Y, g:i A'),
-            ],
+            'user' => $this->_present($user),
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $user)
     {
         //
+    }
+
+    private function _present(User $user)
+    {
+        return [
+            'id' => $user->uuid,
+            'name' => $user->name,
+            'email' => $user->email,
+            'created_at' => $user->created_at->format('l, F jS Y, g:i A'),
+        ];
     }
 }
