@@ -123,5 +123,5 @@
         "resources/js/types/**/*.d.ts",
         "resources/js/**/*.tsx",
         "resources/js/**/*.vue"
-    ]
+        , "resources/js/directives/vCan.tse" ]
 }
